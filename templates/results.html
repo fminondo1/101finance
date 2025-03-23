@@ -21,8 +21,11 @@
             };
             for (var key in baseAmounts) {
                 var amount = baseAmounts[key] / rates[currency];
-                document.getElementById(key).innerText = amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                var formattedAmount = amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById(key).innerText = "$" + formattedAmount + " " + currency;
             }
+            // Update currency display
+            document.getElementById("currencyDisplay").innerText = "Moneda: " + currency;
         }
     </script>
 </head>
@@ -32,9 +35,10 @@
     <!-- Currency Selection -->
     <label for="currencySelect">Moneda: </label>
     <select id="currencySelect" onchange="updateCurrency()">
-        <option value="MXN">MXN</option>
+        <option value="MXN" selected>MXN</option>
         <option value="USD">USD</option>
     </select>
+    <span id="currencyDisplay">Moneda: MXN</span>
 
     <!-- Results Section -->
     <h2>Detalles Financieros</h2>
@@ -45,27 +49,27 @@
         </tr>
         <tr>
             <td>Valor con IVA</td>
-            <td id="valor_con_iva">{{ resultados.valor_con_iva | format_currency }}</td>
+            <td id="valor_con_iva">$ {{ resultados.valor_con_iva | format_currency }} MXN</td>
         </tr>
         <tr>
             <td>Valor Residual</td>
-            <td id="valor_residual">{{ resultados.valor_residual | format_currency }}</td>
+            <td id="valor_residual">$ {{ resultados.valor_residual | format_currency }} MXN</td>
         </tr>
         <tr>
             <td>Comisión por Apertura</td>
-            <td id="comision_apertura">{{ resultados.comision_apertura | format_currency }}</td>
+            <td id="comision_apertura">$ {{ resultados.comision_apertura | format_currency }} MXN</td>
         </tr>
         <tr>
             <td>Rentas Anticipadas</td>
-            <td id="rentas_anticipadas_mxn">{{ resultados.rentas_anticipadas_mxn | format_currency }}</td>
+            <td id="rentas_anticipadas_mxn">$ {{ resultados.rentas_anticipadas_mxn | format_currency }} MXN</td>
         </tr>
         <tr>
             <td>Renta Mensual con IVA</td>
-            <td id="renta_mensual_con_iva">{{ resultados.renta_mensual_con_iva | format_currency }}</td>
+            <td id="renta_mensual_con_iva">$ {{ resultados.renta_mensual_con_iva | format_currency }} MXN</td>
         </tr>
         <tr>
             <td>Pago Inicial</td>
-            <td id="pago_inicial">{{ resultados.pago_inicial | format_currency }}</td>
+            <td id="pago_inicial">$ {{ resultados.pago_inicial | format_currency }} MXN</td>
         </tr>
     </table>
 
@@ -90,7 +94,8 @@
         <p>No hay asesores registrados.</p>
     {% endif %}
 
-    <!-- Exchange Rate Source -->
+    <!-- Exchange Rate Display -->
+    <p>Tipo de cambio: {{ exchange_rate | format_currency }} MXN/USD</p>
     <p>Tasa de cambio USD/MXN obtenida de <a href="https://www.exchangerate-api.com" target="_blank">ExchangeRate-API</a> el {{ current_date }}.</p>
     <p><a href="/">Volver al formulario</a></p>
 </body>
