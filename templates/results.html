@@ -2,53 +2,96 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Resultados del Arrendamiento</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resultados del Cálculo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        function updateCurrency() {
+            var currency = document.getElementById("currencySelect").value;
+            var rates = {
+                'MXN': 1,
+                'USD': {{ exchange_rate }}
+            };
+            var baseAmounts = {
+                'valor_con_iva': {{ resultados.valor_con_iva }},
+                'valor_residual': {{ resultados.valor_residual }},
+                'comision_apertura': {{ resultados.comision_apertura }},
+                'rentas_anticipadas_mxn': {{ resultados.rentas_anticipadas_mxn }},
+                'renta_mensual_con_iva': {{ resultados.renta_mensual_con_iva }},
+                'pago_inicial': {{ resultados.pago_inicial }}
+            };
+            for (var key in baseAmounts) {
+                var amount = baseAmounts[key] / rates[currency];
+                document.getElementById(key).innerText = amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+    </script>
 </head>
-<body>
-    <header class="bg-dark text-white p-3 text-center">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="img-fluid" style="max-height: 100px;">
-        <h1>Resultados del Arrendamiento</h1>
-    </header>
+<body onload="updateCurrency()">
+    <h1>Resultados del Cálculo de Arrendamiento</h1>
 
-    <div class="container mt-4">
-        <h3>Resultados</h3>
-        <table class="table table-bordered">
-            <tr><td>Valor con IVA</td><td>{{ "%.2f" % resultados.valor_con_iva }} MXN</td></tr>
-            <tr><td>Valor Residual</td><td>{{ "%.2f" % resultados.valor_residual }} MXN</td></tr>
-            <tr><td>Comisión por Apertura</td><td>{{ "%.2f" % resultados.comision_apertura }} MXN</td></tr>
-            <tr><td>Rentas Anticipadas (MXN)</td><td>{{ "%.2f" % resultados.rentas_anticipadas_mxn }} MXN</td></tr>
-            <tr><td>Renta Mensual con IVA</td><td>{{ "%.2f" % resultados.renta_mensual_con_iva }} MXN</td></tr>
-            <tr><td>Pago Inicial</td><td>{{ "%.2f" % resultados.pago_inicial }} MXN</td></tr>
-        </table>
+    <!-- Currency Selection -->
+    <label for="currencySelect">Moneda: </label>
+    <select id="currencySelect" onchange="updateCurrency()">
+        <option value="MXN">MXN</option>
+        <option value="USD">USD</option>
+    </select>
 
-        <h3 class="mt-5">Asesores de Venta</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for asesor in asesores %}
+    <!-- Results Section -->
+    <h2>Detalles Financieros</h2>
+    <table border="1">
+        <tr>
+            <th>Concepto</th>
+            <th>Monto</th>
+        </tr>
+        <tr>
+            <td>Valor con IVA</td>
+            <td id="valor_con_iva">{{ resultados.valor_con_iva | format_currency }}</td>
+        </tr>
+        <tr>
+            <td>Valor Residual</td>
+            <td id="valor_residual">{{ resultados.valor_residual | format_currency }}</td>
+        </tr>
+        <tr>
+            <td>Comisión por Apertura</td>
+            <td id="comision_apertura">{{ resultados.comision_apertura | format_currency }}</td>
+        </tr>
+        <tr>
+            <td>Rentas Anticipadas</td>
+            <td id="rentas_anticipadas_mxn">{{ resultados.rentas_anticipadas_mxn | format_currency }}</td>
+        </tr>
+        <tr>
+            <td>Renta Mensual con IVA</td>
+            <td id="renta_mensual_con_iva">{{ resultados.renta_mensual_con_iva | format_currency }}</td>
+        </tr>
+        <tr>
+            <td>Pago Inicial</td>
+            <td id="pago_inicial">{{ resultados.pago_inicial | format_currency }}</td>
+        </tr>
+    </table>
+
+    <!-- Salespersons Section -->
+    <h2>Asesores de Venta</h2>
+    {% if asesores %}
+        <table border="1">
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+            </tr>
+            {% for asesor in asesores %}
                 <tr>
                     <td>{{ asesor.nombre }}</td>
-                    <td>{{ asesor.telefono }}</td>
                     <td>{{ asesor.email }}</td>
+                    <td>{{ asesor.telefono }}</td>
                 </tr>
-                {% endfor %}
-            </tbody>
+            {% endfor %}
         </table>
+    {% else %}
+        <p>No hay asesores registrados.</p>
+    {% endif %}
 
-        <a href="/" class="btn btn-primary mt-3">Volver a Calcular</a>
-    </div>
-
-    <footer class="bg-dark text-white p-3 text-center mt-5">
-        <p>Datos de Contacto: info@tuempresa.com | Tel: 555-0000</p>
-    </footer>
+    <!-- Exchange Rate Source -->
+    <p>Tasa de cambio USD/MXN obtenida de <a href="https://www.exchangerate-api.com" target="_blank">ExchangeRate-API</a> el {{ current_date }}.</p>
+    <p><a href="/">Volver al formulario</a></p>
 </body>
 </html>
-EOF
