@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Arrendamiento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="bg-dark text-white p-3 text-center">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="img-fluid" style="max-height: 100px;">
+        <h1>Calculadora de Arrendamiento</h1>
+    </header>
+
+    <div class="container mt-4">
+        <form method="POST" class="row g-3">
+            <div class="col-md-6">
+                <label for="valor_arrendamiento" class="form-label">Valor del Arrendamiento (MXN sin IVA)</label>
+                <input type="number" step="0.01" class="form-control" name="valor_arrendamiento" required>
+            </div>
+            <div class="col-md-6">
+                <label for="tasa_anual" class="form-label">Tasa Anual (%)</label>
+                <input type="number" step="0.01" class="form-control" name="tasa_anual" required>
+            </div>
+            <div class="col-md-6">
+                <label for="plazo_meses" class="form-label">Plazo (meses)</label>
+                <input type="number" class="form-control" name="plazo_meses" required>
+            </div>
+            <div class="col-md-6">
+                <label for="valor_residual" class="form-label">Valor Residual (%)</label>
+                <input type="number" step="0.01" class="form-control" name="valor_residual" required>
+            </div>
+            <div class="col-md-6">
+                <label for="comision_apertura" class="form-label">Comisión Apertura (%)</label>
+                <input type="number" step="0.01" class="form-control" name="comision_apertura" required>
+            </div>
+            <div class="col-md-6">
+                <label for="rentas_anticipadas" class="form-label">Rentas Anticipadas</label>
+                <input type="number" class="form-control" name="rentas_anticipadas" required>
+            </div>
+            <div class="col-md-6">
+                <label for="nombre_cliente" class="form-label">Nombre del Cliente</label>
+                <input type="text" class="form-control" name="nombre_cliente" required>
+            </div>
+            <div class="col-md-6">
+                <label for="email_cliente" class="form-label">Email del Cliente</label>
+                <input type="email" class="form-control" name="email_cliente" required>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Calcular</button>
+            </div>
+        </form>
+
+        <h3 class="mt-5">Asesores de Venta</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asesor in asesores %}
+                <tr>
+                    <td>{{ asesor.nombre }}</td>
+                    <td>{{ asesor.telefono }}</td>
+                    <td>{{ asesor.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="bg-dark text-white p-3 text-center mt-5">
+        <p>Datos de Contacto: info@tuempresa.com | Tel: 555-0000</p>
+    </footer>
+</body>
+</html>
+EOF
