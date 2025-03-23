@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 from models import db, Cliente, Asesor
 import os
-import locale
 import requests
 from datetime import datetime
 
@@ -10,13 +9,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///clientes.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
-# Set locale for number formatting (Spanish Mexico)
-locale.setlocale(locale.LC_ALL, "es_MX.UTF-8")
-
-# Custom filter for formatting numbers
+# Custom filter for formatting numbers without locale dependency
 @app.template_filter("format_currency")
 def format_currency(value):
-    return locale.format_string("%.2f", value, grouping=True)
+    try:
+        # Format number with commas as thousand separators and 2 decimal places
+        return "{:,.2f}".format(float(value))
+    except (ValueError, TypeError):
+        return str(value)  # Fallback to string if formatting fails
 
 # Initialize database tables and seed asesores
 with app.app_context():
@@ -58,11 +58,17 @@ def index():
         db.session.add(cliente)
         db.session.commit()
 
-        # Fetch USD/MXN exchange rate
-        response = requests.get("https://open.er-api.com/v6/latest/USD")
-        data = response.json()
-        exchange_rate = data["rates"]["MXN"] if data["result"] == "success" else 20.0  # Fallback rate
+        # Fetch USD/MXN exchange rate with error handling
+        exchange_rate = 20.0  # Default fallback rate
         current_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        try:
+            response = requests.get("https://open.er-api.com/v6/latest/USD", timeout=5)
+            response.raise_for_status()  # Raise an error for bad status codes
+            data = response.json()
+            if data["result"] == "success":
+                exchange_rate = data["rates"]["MXN"]
+        except (requests.RequestException, KeyError, ValueError) as e:
+            print(f"Error fetching exchange rate: {e}")
 
         resultados = {
             "valor_con_iva": valor_con_iva,
