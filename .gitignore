@@ -1,5 +1,4 @@
-.vscode/
-calculadora_arrendamiento_web/
-.vscode/
-calculadora_arrendamiento_web/
-*.save
+__pycache__/
+venv/
+__pycache__/
+venv/
