@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración - 101 Finance</title>
+    <style>
+        .success { color: green; }
+        .error { color: red; }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: #f9f9f9; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
+        .dropdown-content a:hover { background-color: #f1f1f1; }
+        .config-button { position: absolute; top: 10px; right: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="position: absolute; top: 10px; left: 10px;">
+        <span style="position: absolute; top: 30px; left: 120px;">444-8084058</span>
+        <div style="text-align: center; padding: 20px;">
+            <h3>Tipo de Cambio - {{ exchange_rate.date }}: ${{ exchange_rate.rate }}</h3>
+        </div>
+        <div class="dropdown config-button">
+            <button>Configuración</button>
+            <div class="dropdown-content">
+                <a href="{{ url_for('admin_settings') }}">Configuración de Arrendamiento Puro</a>
+                <a href="{{ url_for('admin_settings') }}#users">Administrar Usuarios</a>
+            </div>
+        </div>
+        <a href="{{ url_for('logout') }}" style="position: absolute; top: 15px; right: 10px;">Cerrar Sesión</a>
+    </header>
+    <nav style="margin-top: 80px;">
+        <a href="{{ url_for('index') }}">Inicio</a>
+    </nav>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <h1>Configuración de Arrendamiento Puro</h1>
+        <form method="POST" action="{{ url_for('admin_settings') }}">
+            <input type="hidden" name="action" value="update_settings">
+            {% for setting in settings %}
+                <label for="{{ setting.name }}">{{ setting.name }}:</label>
+                <input type="text" name="{{ setting.name }}" value="{{ setting.value }}" required>
+                <br>
+            {% endfor %}
+            <button type="submit">Guardar Cambios</button>
+        </form>
+        <h1 id="users">Administrar Usuarios</h1>
+        <h2>Usuarios Existentes</h2>
+        <ul>
+            {% for user in users %}
+                <li>{{ user.email }} - Rol: {{ user.role }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Agregar Nuevo Usuario</h2>
+        <form method="POST" action="{{ url_for('admin_settings') }}">
+            <input type="hidden" name="action" value="add_user">
+            <label for="new_email">Correo Electrónico:</label>
+            <input type="email" name="new_email" required>
+            <br>
+            <label for="new_password">Contraseña:</label>
+            <input type="password" name="new_password" required>
+            <br>
+            <label for="new_role">Rol:</label>
+            <select name="new_role">
+                <option value="user">Usuario</option>
+                <option value="admin">Administrador</option>
+            </select>
+            <br>
+            <button type="submit">Agregar Usuario</button>
+        </form>
+        <h2>Control de Accesos (Futuro)</h2>
+        <p>Próximamente: Restricciones de acceso por página y permisos personalizados.</p>
+    </main>
+    <footer style="position: fixed; bottom: 0; width: 100%; text-align: center;">
+        <p>101 Finance - Contacto: 444-8084058</p>
+    </footer>
+</body>
+</html>

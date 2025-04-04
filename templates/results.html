@@ -2,101 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Resultados del Cálculo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script>
-        function updateCurrency() {
-            var currency = document.getElementById("currencySelect").value;
-            var rates = {
-                'MXN': 1,
-                'USD': {{ exchange_rate }}
-            };
-            var baseAmounts = {
-                'valor_con_iva': {{ resultados.valor_con_iva }},
-                'valor_residual': {{ resultados.valor_residual }},
-                'comision_apertura': {{ resultados.comision_apertura }},
-                'rentas_anticipadas_mxn': {{ resultados.rentas_anticipadas_mxn }},
-                'renta_mensual_con_iva': {{ resultados.renta_mensual_con_iva }},
-                'pago_inicial': {{ resultados.pago_inicial }}
-            };
-            for (var key in baseAmounts) {
-                var amount = baseAmounts[key] / rates[currency];
-                var formattedAmount = amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                document.getElementById(key).innerText = "$" + formattedAmount + " " + currency;
-            }
-            // Update currency display
-            document.getElementById("currencyDisplay").innerText = "Moneda: " + currency;
-        }
-    </script>
+    <title>Resultados - 101 Finance</title>
+    <style>
+        .success { color: green; }
+        .error { color: red; }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: #f9f9f9; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
+        .dropdown-content a:hover { background-color: #f1f1f1; }
+        .config-button { position: absolute; top: 10px; right: 80px; }
+    </style>
 </head>
-<body onload="updateCurrency()">
-    <h1>Resultados del Cálculo de Arrendamiento</h1>
-
-    <!-- Currency Selection -->
-    <label for="currencySelect">Moneda: </label>
-    <select id="currencySelect" onchange="updateCurrency()">
-        <option value="MXN" selected>MXN</option>
-        <option value="USD">USD</option>
-    </select>
-    <span id="currencyDisplay">Moneda: MXN</span>
-
-    <!-- Results Section -->
-    <h2>Detalles Financieros</h2>
-    <table border="1">
-        <tr>
-            <th>Concepto</th>
-            <th>Monto</th>
-        </tr>
-        <tr>
-            <td>Valor con IVA</td>
-            <td id="valor_con_iva">$ {{ resultados.valor_con_iva | format_currency }} MXN</td>
-        </tr>
-        <tr>
-            <td>Valor Residual</td>
-            <td id="valor_residual">$ {{ resultados.valor_residual | format_currency }} MXN</td>
-        </tr>
-        <tr>
-            <td>Comisión por Apertura</td>
-            <td id="comision_apertura">$ {{ resultados.comision_apertura | format_currency }} MXN</td>
-        </tr>
-        <tr>
-            <td>Rentas Anticipadas</td>
-            <td id="rentas_anticipadas_mxn">$ {{ resultados.rentas_anticipadas_mxn | format_currency }} MXN</td>
-        </tr>
-        <tr>
-            <td>Renta Mensual con IVA</td>
-            <td id="renta_mensual_con_iva">$ {{ resultados.renta_mensual_con_iva | format_currency }} MXN</td>
-        </tr>
-        <tr>
-            <td>Pago Inicial</td>
-            <td id="pago_inicial">$ {{ resultados.pago_inicial | format_currency }} MXN</td>
-        </tr>
-    </table>
-
-    <!-- Salespersons Section -->
-    <h2>Asesores de Venta</h2>
-    {% if asesores %}
-        <table border="1">
-            <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-            </tr>
-            {% for asesor in asesores %}
-                <tr>
-                    <td>{{ asesor.nombre }}</td>
-                    <td>{{ asesor.email }}</td>
-                    <td>{{ asesor.telefono }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No hay asesores registrados.</p>
-    {% endif %}
-
-    <!-- Exchange Rate Display -->
-    <p>Tipo de cambio: {{ exchange_rate | format_currency }} MXN/USD</p>
-    <p>Tasa de cambio USD/MXN obtenida de <a href="https://www.exchangerate-api.com" target="_blank">ExchangeRate-API</a> el {{ current_date }}.</p>
-    <p><a href="/">Volver al formulario</a></p>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="position: absolute; top: 10px; left: 10px;">
+        <span style="position: absolute; top: 30px; left: 120px;">444-8084058</span>
+        <div style="text-align: center; padding: 20px;">
+            <h3>Tipo de Cambio - {{ exchange_rate.date }}: ${{ exchange_rate.rate }}</h3>
+        </div>
+        {% if current_user.is_authenticated %}
+            <div class="dropdown config-button">
+                <button>Configuración</button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('admin_settings') }}">Configuración de Arrendamiento Puro</a>
+                    <a href="{{ url_for('admin_settings') }}#users">Administrar Usuarios</a>
+                </div>
+            </div>
+            <a href="{{ url_for('logout') }}" style="position: absolute; top: 15px; right: 10px;">Cerrar Sesión</a>
+        {% endif %}
+    </header>
+    <nav style="margin-top: 80px;">
+        <a href="{{ url_for('index') }}">Inicio</a>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('login') }}">Iniciar Sesión</a>
+        {% endif %}
+    </nav>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <h1>Resultados del Arrendamiento</h1>
+        <p>Nombre: {{ name }}</p>
+        <p>Correo: {{ email }}</p>
+        <p>Monto de Arrendamiento: {{ lease_amount|round(2) }}</p>
+        <p>Valor Residual Máximo: {{ residual_value|round(2) }}%</p>
+        <p>Plazo: {{ term }} meses</p>
+        <p>Renta Mensual: {{ monthly_rent|round(2) }}</p>
+        <p>Pago Inicial: {{ initial_payment|round(2) }}</p>
+        <p>Tasa de Interés: {{ interest_rate|round(2) }}%</p>
+        <p>Comisión por Apertura: {{ opening_fee|round(2) }}</p>
+        <p>Rentas por Anticipado: {{ advance_rentals|round(2) }}</p>
+    </main>
+    <footer style="position: fixed; bottom: 0; width: 100%; text-align: center;">
+        <p>Datos del Asesor: {{ name }} - {{ email }}</p>
+        <p>101 Finance - Contacto: 444-8084058</p>
+    </footer>
 </body>
 </html>

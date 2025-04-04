@@ -1,3 +1,5 @@
-flask
+Flask
+Flask-Login
+Werkzeug
+pymongo
 gunicorn
-flask_sqlalchemy
