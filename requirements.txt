@@ -21,5 +21,8 @@ requests
 flask
 gunicorn
 gunicorn==22.0.0
+<<<<<<< HEAD
 >>>>>>> 17a33b1 (Añadido gunicorn para despliegue en Azure)
+=======
+>>>>>>> 9790bbe (Añadido gunicorn para despliegue en Azure)
 gunicorn==22.0.0
