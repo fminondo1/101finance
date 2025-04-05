@@ -1,0 +1,27 @@
+{
+  "name": "101finance",
+  "version": "1.0.0",
+  "description": "101-FIN",
+  "keywords": [
+    "101finance"
+  ],
+  "homepage": "https://github.com/fminondo1/101finance#readme",
+  "bugs": {
+    "url": "https://github.com/fminondo1/101finance/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fminondo1/101finance.git"
+  },
+  "license": "ISC",
+  "author": "FMA",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
