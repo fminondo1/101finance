@@ -1,0 +1,4 @@
+Flask==2.3.2  # Web framework
+gunicorn==20.1.0  # WSGI HTTP server for deployment
+requests==2.31.0  # HTTP library
+python-dotenv==1.0.0  # For environment variable management
