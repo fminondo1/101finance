@@ -33,6 +33,49 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'financiera101'
+          app-name: 'financiera101-c7fcfgd6d4f7fph6'  # Default domain: financiera101-c7fcfgd6d4f7fph6.canadacentral-01.azurewebsites.net
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          resource-group: '101Finance_group'  # Resource Group: 101Finance_group
+          app-service-plan: 'ASP-101Financegroup-8905'  # App Service Plan: ASP-101Financegroup-8905 (P1v2: 1)
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run the application locally
+        run: |
+          source venv/bin/activate
+          python app.py &  # Replace 'app.py' with your application's entry point
+          sleep 10  # Wait for the server to start
+
+      - name: Test the webpage
+        run: |
+          curl -f http://localhost:5000  # Replace with the correct local URL and port
+
+      - name: Serve index.html locally
+        run: |
+          echo "Serving index.html locally..."
+          python -m http.server 8000 &  # Starts a local server on port 8000
+          sleep 5  # Wait for the server to start
+          echo "Open http://localhost:8000 in your browser to view index.html"
+
+      - name: Deploy locally
+        run: |
+          echo "To deploy locally, run the following commands:"
+          echo "1. python -m venv venv"
+          echo "2. source venv/bin/activate"
+          echo "3. pip install -r requirements.txt"
+          echo "4. python app.py  # Replace 'app.py' with your application's entry point"
