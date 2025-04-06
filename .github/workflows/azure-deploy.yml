@@ -13,8 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0 # Ensures the full history is fetched
-        submodules: recursive # Fetches submodules if they exist
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -29,8 +28,8 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: '101finance-f5gmbpb4g8g6ewhy' # Verifica que este nombre sea correcto
+        app-name: '101finance-f5gmbpb4g8g6ewhy'
         slot-name: 'production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: '.'
-        startup-command: 'gunicorn --bind=0.0.0.0:8000 app:app'
+        startup-command: 'gunicorn --bind=0.0.0.0:8000 run:app'
