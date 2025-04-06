@@ -4,3 +4,8 @@ flask-login==0.6.3
 werkzeug==3.0.4
 requests==2.32.3
 gunicorn==22.0.0
+blinker==1.9.0
+Jinja2==3.1.6
+itsdangerous==2.2.0
+MarkupSafe==3.0.2
+click==8.1.8
