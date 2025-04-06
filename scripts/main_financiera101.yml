@@ -1,0 +1,19 @@
+# Azure deployment configuration for Financiera101
+
+$schema: "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+contentVersion: "1.0.0.0"
+resources:
+  - type: "Microsoft.Web/sites"
+    apiVersion: "2021-02-01"
+    name: "financiera101"
+    location: "Canada Central"
+    properties:
+      serverFarmId: "/subscriptions/60a39d3c-87bf-4d46-a30a-2596cb1dc3c7/resourceGroups/101Finance_group/providers/Microsoft.Web/serverfarms/ASP-101Financegroup-8905"
+      siteConfig:
+        appSettings:
+          - name: "MONGO_URI"
+            value: "mongodb://fminondo:xyrreW-nisbi3-pahsuq@101finance-server.mongo.cosmos.azure.com:10255/101finance_db?ssl=true&replicaSet=globaldb&retrywrites=false"
+          - name: "AZURE_SUBSCRIPTION_ID"
+            value: "60a39d3c-87bf-4d46-a30a-2596cb1dc3c7"
+          - name: "AZURE_RESOURCE_GROUP"
+            value: "101Finance_group"
