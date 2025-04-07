@@ -14,3 +14,12 @@ db.users.insert_one({
     'permissions': {'configuration': True, 'catalog': True}
 })
 print('Admin user created')
+
+# In init_db.py, after creating the admin user
+if 'configuration' not in db.list_collection_names():
+    db.configuration.insert_many([
+        {'type': 'Arrendamiento', 'interest_rate': 5.0, 'opening_commission': 2.0, 'max_term': 36, 'max_residual_value': 10.0},
+        {'type': 'Credito Simple', 'interest_rate': 5.0, 'opening_commission': 2.0, 'max_term': 36},
+        {'type': 'Credito Hipotecario', 'interest_rate': 5.0, 'opening_commission': 2.0, 'max_term': 20, 'annual_insurance': 1.0}
+    ])
+    print('Default configurations created')

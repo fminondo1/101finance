@@ -18,15 +18,15 @@
         <h1>Welcome to Financiera 101</h1>
         <nav>
             <ul>
+                <li><a href="{{ url_for('calculators_arrendamiento') }}">Arrendamiento</a></li>
+                <li><a href="{{ url_for('calculators_credito_simple') }}">Credito Simple</a></li>
+                <li><a href="{{ url_for('calculators_credito_hipotecario') }}">Credito Hipotecario</a></li>
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('calculators_arrendamiento') }}">Arrendamiento</a></li>
-                    <li><a href="#">Credito Simple (Coming Soon)</a></li>
-                    <li><a href="#">Credito Hipotecario (Coming Soon)</a></li>
                     {% if current_user.permissions.configuration %}
                         <li><a href="{{ url_for('configuration') }}">Configuracion</a></li>
                     {% endif %}
                     {% if current_user.permissions.catalog %}
-                        <li><a href="#">Usuarios (Coming Soon)</a></li>
+                        <li><a href="{{ url_for('users') }}">Usuarios</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
