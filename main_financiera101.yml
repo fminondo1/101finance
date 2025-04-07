@@ -25,6 +25,6 @@ jobs:
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'financiera101-c7fcfgd6d4f7fph6'
+          app-name: 'financiera101'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: '.'

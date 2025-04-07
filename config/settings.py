@@ -1,6 +1,6 @@
 # Azure App Service configuration
 AZURE_APP_SERVICE = {
-    "default_domain": "financiera101-c7fcfgd6d4f7fph6.canadacentral-01.azurewebsites.net",
+    "default_domain": "financiera101.azurewebsites.net",
     "app_service_plan": "ASP-101Financegroup-8905",
     "resource_group": "101Finance_group",
     "status": "Running",
