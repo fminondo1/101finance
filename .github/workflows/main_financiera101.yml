@@ -36,8 +36,7 @@ jobs:
           app-name: 'financiera101-c7fcfgd6d4f7fph6'  # Default domain: financiera101-c7fcfgd6d4f7fph6.canadacentral-01.azurewebsites.net
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          # Removed invalid input 'resource-group'
-          # Removed invalid input 'app-service-plan'
+          package: '.'
 
   test:
     runs-on: ubuntu-latest
