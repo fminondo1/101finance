@@ -61,6 +61,7 @@ jobs:
 
       - name: Test the webpage
         run: |
+          sleep 10
           curl -f http://localhost:5000  # Replace with the correct local URL and port
 
       - name: Serve index.html locally
