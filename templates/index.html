@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financiera 101</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" height="50">
+        </div>
+        <div class="exchange-rate">
+            {{ exchange_rate }}
+        </div>
+    </header>
+    <main>
+        <h1>Welcome to Financiera 101</h1>
+        <nav>
+            <ul>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('calculators_arrendamiento') }}">Arrendamiento</a></li>
+                    <li><a href="#">Credito Simple (Coming Soon)</a></li>
+                    <li><a href="#">Credito Hipotecario (Coming Soon)</a></li>
+                    {% if current_user.permissions.configuration %}
+                        <li><a href="{{ url_for('configuration') }}">Configuracion</a></li>
+                    {% endif %}
+                    {% if current_user.permissions.catalog %}
+                        <li><a href="#">Usuarios (Coming Soon)</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </main>
+    <footer>
+        101 Grados Corp. | www.101grados.mx | 444-808408
+    </footer>
+</body>
+</html>

@@ -1,4 +1,7 @@
-Flask==2.3.2  # Web framework
+Flask==2.3.3  # Web framework
 gunicorn==20.1.0  # WSGI HTTP server for deployment
 requests==2.31.0  # HTTP library
 python-dotenv==1.0.0  # For environment variable management
+pymongo==4.6.0
+Flask-Login==0.6.3
+werkzeug==3.0.1

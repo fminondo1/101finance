@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration - Financiera 101</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" height="50">
+        </div>
+    </header>
+    <main>
+        <h1>Configuration</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <h2>Arrendamiento</h2>
+        <form method="POST">
+            <input type="hidden" name="type" value="Arrendamiento">
+            <label>Interest Rate (%):</label>
+            <input type="number" step="0.01" name="interest_rate" value="{{ configs.Arrendamiento.interest_rate|default(5.0) }}"><br>
+            <label>Opening Commission (%):</label>
+            <input type="number" step="0.01" name="opening_commission" value="{{ configs.Arrendamiento.opening_commission|default(2.0) }}"><br>
+            <label>Max Term (months):</label>
+            <input type="number" name="max_term" value="{{ configs.Arrendamiento.max_term|default(36) }}"><br>
+            <label>Max Residual Value (%):</label>
+            <input type="number" step="0.01" name="max_residual_value" value="{{ configs.Arrendamiento.max_residual_value|default(10.0) }}"><br>
+            <input type="submit" value="Save">
+        </form>
+        <a href="{{ url_for('index') }}">Back</a>
+    </main>
+    <footer>
+        101 Grados Corp. | www.101grados.mx | 444-808408
+    </footer>
+</body>
+</html>
